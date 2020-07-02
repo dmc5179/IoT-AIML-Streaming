@@ -1,4 +1,35 @@
 ---
+- hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+  tasks:
+
+    - name: Install required packages
+      become: true
+      dnf:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - python3-devel
+        - python3-pip
+        - youtube-dl
+
+    - name: Install required pip modules
+      pip:
+        name: '{{ item }}'
+        extra_args: '--user'
+        executable: pip3
+      with_items:
+        - kubernetes
+        - openshift
+
+
+    - name: Knative Setup
+      include_role:
+        name: knative
+        tasks_from: setup
+
 
 #go run main.go knative setup
 
