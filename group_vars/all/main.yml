@@ -1,1 +1,21 @@
 ---
+###################################################################
+# Path to binaries
+###################################################################
+openshift_install: '/usr/local/bin/openshift-install'
+openshift_client: '/usr/local/bin/oc'
+kubectl: '/usr/local/bin/kubectl'
+
+###############################################
+
+# RedHat CoreOS Version. Might not match OpenShift Version
+# 4.3.8 and 4.4.3 currently available
+rhcos_ver: '4.4.3'
+# OpenShift Version
+# 4.3.21 and 4.4.7 currently available
+ocp_ver: '4.4.7'
+# RHCOS and OpenShift Architecture
+arch: 'x86_64'
+
+kube_ssl_enabled: false
+kubeconfig: "{{ ansible_env.HOME }}/.kube/config"
