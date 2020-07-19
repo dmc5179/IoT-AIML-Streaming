@@ -1,22 +1,22 @@
 ---
-
-- name: Create Knative Operator Group
+  
+- name: Create Kafka namespace
   delegate_to: localhost
   k8s:
     state: present
     wait: true
     kubeconfig: "{{ kubeconfig }}"
     validate_certs: '{{ kube_ssl_enabled }}'
-    definition: "{{ lookup('template', 'templates/setup/operatorgroup.yaml') }}"
+    definition: "{{ lookup('template', 'templates/setup/kafka-namespace.yaml') }}"
 
-- name: Create Knative Operator Subscription
+- name: Apply Strimzi Template
   delegate_to: localhost
   k8s:
     state: present
     wait: true
     kubeconfig: "{{ kubeconfig }}"
     validate_certs: '{{ kube_ssl_enabled }}'
-    definition: "{{ lookup('template', 'templates/setup/sub.yaml') }}"
+    definition: "{{ lookup('url', 'https://github.com/strimzi/strimzi-kafka-operator/releases/download/0.17.0/strimzi-cluster-operator-0.17.0.yaml') }}"
 
 - name: Deploy Knative Operator
   delegate_to: localhost
@@ -25,4 +25,4 @@
     wait: true
     kubeconfig: "{{ kubeconfig }}"
     validate_certs: '{{ kube_ssl_enabled }}'
-    definition: "{{ lookup('template', 'templates/setup/knative-serving.yaml') }}"
+    definition: "{{ lookup('template', 'templates/setup/kafka.yaml') }}"

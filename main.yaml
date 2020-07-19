@@ -8,52 +8,71 @@
     - name: Install required packages
       become: true
       dnf:
-        name: "{{ item }}"
+        name:
+          - python3-devel
+          - python3-pip
+          - youtube-dl
         state: present
-      with_items:
-        - python3-devel
-        - python3-pip
-        - youtube-dl
 
     - name: Install required pip modules
       pip:
-        name: '{{ item }}'
+        name:
+          - kubernetes
+          - openshift
         extra_args: '--user'
         executable: pip3
-      with_items:
-        - kubernetes
-        - openshift
 
-
+    #go run main.go knative setup
     - name: Knative Setup
       include_role:
         name: knative
         tasks_from: setup
 
+    #go run main.go kafka setup
+    - name: Kafka Setup
+      include_role:
+        name: kafka
+        tasks_from: setup
 
-#go run main.go knative setup
+    #go run main.go kafka bridge
+    - name: Kafka Bridge
+      include_role:
+        name: kafka
+        tasks_from: bridge
 
-#go run main.go kafka setup
+    #curl -v GET my-bridge-route-kafka.apps.dan.danclark.io/healthy
 
-#go run main.go kafka bridge
+    #go run main.go ceph setup
+    - name: Ceph Setup
+      include_role:
+        name: ceph
+        tasks_from: setup
 
-#curl -v GET my-bridge-route-kafka.apps.dan.danclark.io/healthy
+    #go run main.go ceph user danclark
+    - name: Ceph Setup User
+      include_role:
+        name: ceph
+        tasks_from: user
+        vars:
+          name: danclark
 
-#go run main.go ceph setup
+    #go run main.go ceph secrets danclark
+    - name: Ceph Get User Secrets
+      include_role:
+        name: ceph
+        tasks_from: secrets
+        vars:
+          name: danclark
 
-#go run main.go ceph user danclark
+    #export CEPH_ENDPOINT='ceph-route-rook-ceph.apps.dan.example.io'
+    #export CEPH_SECRET=''
+    #export CEPH_KEY=''
 
-#go run main.go ceph secrets danclark
+    #go run main.go tensorflowServing setup -n kafka
 
-#export CEPH_ENDPOINT='ceph-route-rook-ceph.apps.dan.example.io'
-#export CEPH_SECRET=''
-#export CEPH_KEY=''
+    #go run main.go knative service video-analytics -n kafka --cephEndpoint "${CEPH_ENDPOINT}" --cephAccessKey "${CEPH_KEY}" --cephSecretKey "${CEPH_SECRET}"
 
-#go run main.go tensorflowServing setup -n kafka
-
-#go run main.go knative service video-analytics -n kafka --cephEndpoint "${CEPH_ENDPOINT}" --cephAccessKey "${CEPH_KEY}" --cephSecretKey "${CEPH_SECRET}"
-
-#go run main.go knative source kafka video-analytics -n kafka
+    #go run main.go knative source kafka video-analytics -n kafka
 
 #
 #
