@@ -10,10 +10,10 @@ kubectl: '/usr/local/bin/kubectl'
 
 # RedHat CoreOS Version. Might not match OpenShift Version
 # 4.3.8 and 4.4.3 currently available
-rhcos_ver: '4.4.3'
+rhcos_ver: '4.3.8'
 # OpenShift Version
 # 4.3.21 and 4.4.7 currently available
-ocp_ver: '4.4.7'
+ocp_ver: '4.3.25'
 # RHCOS and OpenShift Architecture
 arch: 'x86_64'
 

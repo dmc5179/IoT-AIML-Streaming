@@ -1,2 +1,3 @@
 *.swp
 ansible.log
+group_vars/all/main.yml
