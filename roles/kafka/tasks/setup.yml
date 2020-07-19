@@ -1,14 +1,18 @@
 ---
-  
-- name: Create Kafka namespace
+
+
+- name: Create knative-serving namespace
   delegate_to: localhost
   k8s:
+    name: 'kafka'
+    api_version: v1
+    kind: Namespace
     state: present
     wait: true
     kubeconfig: "{{ kubeconfig }}"
     validate_certs: '{{ kube_ssl_enabled }}'
-    definition: "{{ lookup('template', 'templates/setup/kafka-namespace.yaml') }}"
 
+# Need to replace the namespace in this yaml file with our namespace: kafka
 - name: Apply Strimzi Template
   delegate_to: localhost
   k8s:
