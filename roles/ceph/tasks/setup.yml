@@ -1,6 +1,6 @@
 ---
 
-- name: Ceph A
+- name: Ceph | A
   delegate_to: localhost
   k8s:
     state: present
@@ -9,7 +9,7 @@
     validate_certs: '{{ kube_ssl_enabled }}'
     definition: "{{ lookup('template', 'templates/setup/common.yaml') }}"
 
-- name: Ceph B
+- name: Ceph | B
   delegate_to: localhost
   k8s:
     state: present
@@ -18,7 +18,7 @@
     validate_certs: '{{ kube_ssl_enabled }}'
     definition: "{{ lookup('template', 'templates/setup/operator-openshift.yaml') }}"
 
-- name: Ceph C
+- name: Ceph | C
   delegate_to: localhost
   k8s:
     state: present
@@ -27,7 +27,7 @@
     validate_certs: '{{ kube_ssl_enabled }}'
     definition: "{{ lookup('template', 'templates/setup/cluster-on-pvc.yaml') }}"
 
-- name: Ceph D
+- name: Ceph | D
   delegate_to: localhost
   k8s:
     state: present
@@ -36,11 +36,11 @@
     validate_certs: '{{ kube_ssl_enabled }}'
     definition: "{{ lookup('template', 'templates/setup/toolbox.yaml') }}"
 
-- name: Pause for a bit
+- name: Ceph | Pause for a bit
   pause:
     minutes: 2
 
-- name: Ceph E
+- name: Ceph | E
   delegate_to: localhost
   k8s:
     state: present
@@ -49,7 +49,7 @@
     validate_certs: '{{ kube_ssl_enabled }}'
     definition: "{{ lookup('template', 'templates/setup/object-openshift.yaml') }}"
 
-- name: Ceph F
+- name: Ceph | F
   delegate_to: localhost
   k8s:
     state: present

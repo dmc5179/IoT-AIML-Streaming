@@ -1,6 +1,6 @@
 ---
 
-- name: Create kafka namespace
+- name: Kafka | Create namespace
   delegate_to: localhost
   k8s:
     name: 'kafka'
@@ -12,7 +12,7 @@
     validate_certs: '{{ kube_ssl_enabled }}'
 
 # Need to replace the namespace in this yaml file with our namespace: kafka
-- name: Apply Strimzi Template
+- name: Kafka | Apply Strimzi Template
   delegate_to: localhost
   k8s:
     state: present
@@ -22,7 +22,7 @@
     validate_certs: '{{ kube_ssl_enabled }}'
     definition: "{{ lookup('url', 'https://github.com/strimzi/strimzi-kafka-operator/releases/download/0.17.0/strimzi-cluster-operator-0.17.0.yaml') }}"
 
-- name: Deploy Knative Operator
+- name: Kafka | Deploy Operator
   delegate_to: localhost
   k8s:
     state: present
