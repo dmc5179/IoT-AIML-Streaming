@@ -4,6 +4,7 @@
   delegate_to: localhost
   k8s:
     state: present
+    namespace: 'openshift-operators'
     wait: true
     kubeconfig: "{{ kubeconfig }}"
     validate_certs: '{{ kube_ssl_enabled }}'
@@ -13,15 +14,28 @@
   delegate_to: localhost
   k8s:
     state: present
+    namespace: 'openshift-operators'
     wait: true
     kubeconfig: "{{ kubeconfig }}"
     validate_certs: '{{ kube_ssl_enabled }}'
     definition: "{{ lookup('template', 'templates/setup/sub.yaml') }}"
 
+- name: Create knative-serving namespace
+  delegate_to: localhost
+  k8s:
+    name: 'knative-serving'
+    api_version: v1
+    kind: Namespace
+    state: present
+    wait: true
+    kubeconfig: "{{ kubeconfig }}"
+    validate_certs: '{{ kube_ssl_enabled }}'
+
 - name: Deploy Knative Operator
   delegate_to: localhost
   k8s:
     state: present
+    namespace: 'knative-serving'
     wait: true
     kubeconfig: "{{ kubeconfig }}"
     validate_certs: '{{ kube_ssl_enabled }}'
