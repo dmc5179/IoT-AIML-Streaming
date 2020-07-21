@@ -1,0 +1,86 @@
+---
+- hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+  tasks:
+
+    - name: Create IoTCLI Install Path
+      file:
+        path: '{{ ansible_env.HOME }}/.local/bin'
+        state: directory
+
+    - name: Download IoTCLI
+      get_uri:
+        url: '{{ iotcli_url }}'
+        dest: '{{ ansible_env.HOME }}/.local/bin'
+        mode: '0755'
+
+    - name: Setup Knative
+      shell:
+        cmd: 'IoTCLI knative setup'
+      vars:
+        ansible_command_timeout: 300
+      tags:
+        - knative
+
+    - name: Setup Kafka
+      shell:
+        cmd: 'IoTCLI kafka setup'
+      vars:
+        ansible_command_timeout: 300
+      tags:
+        - kafka
+
+    - name: Setup Kafka Bridge
+      shell:
+        cmd: 'IoTCLI kafka bridge'
+      vars:
+        ansible_command_timeout: 300
+      tags:
+        - kafka
+
+    - name: Test Kafka Bridge
+      uri:
+        url: 'http://my-bridge-route-kafka.apps.{{ ocp_cluster_name }}.{{ ocp_base_domain }}/healthy'
+        method: GET
+        status_code: 200
+      tags:
+        - kafka
+
+    - name: Setup Ceph
+      shell:
+        cmd: 'IoTCLI ceph setup'
+      vars:
+        ansible_command_timeout: 900
+      tags:
+        - ceph
+
+#go run main.go ceph user danclark
+
+#go run main.go ceph secrets danclark
+
+#export CEPH_ENDPOINT='ceph-route-rook-ceph.apps.dan.danclark.io'
+#export CEPH_SECRET='OGd0T3JxcXZtMHJ5M3JqWXdzUlFlazBrWEo2Z3gxeDd5UmRveU9zTQ=='
+#export CEPH_KEY='SlhNVjFLRTBRNjFVSEhEUTg2SzA='
+
+#go run main.go tensorflowServing setup -n kafka
+
+#go run main.go knative service video-analytics -n kafka --cephEndpoint "${CEPH_ENDPOINT}" --cephAccessKey "${CEPH_KEY}" --cephSecretKey "${CEPH_SECRET}"
+
+#go run main.go knative source kafka video-analytics -n kafka
+
+#
+#
+# Start the IoT Video Simulator here
+# cd /home/danclark/workspace/2020Summit-IoT-Streaming-Demo/iotDeviceSimulator-kafka
+# export STREAMURL=https://www.youtube.com/watch?v=wjsHwDFlPKc
+# export ENDPOINT=my-bridge-route-kafka.apps.dan.danclark.io/topics/my-topic
+# go run ./cmd
+
+
+
+#go run main.go knative service video-serving -n kafka --cephEndpoint "${CEPH_ENDPOINT}" --cephAccessKey "${CEPH_KEY}" --cephSecretKey "${CEPH_SECRET}"
+
+#oc get ksvc
+
